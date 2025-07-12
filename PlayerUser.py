@@ -7,5 +7,9 @@ class PlayerUser(Player):
             result += ' [' + str(index) + '] ' + cart_item.name + ' | '
             index += 1
 
-        result += ' [0]  Пас'
+        result += ' [+]  Пас'
+        result += ' [-]  Забрать'
         return result
+
+    def make_move(self):
+        print('Ход пользователя')

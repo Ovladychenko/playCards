@@ -1,4 +1,6 @@
 import random
+
+
 class DeckCards:
     "Класс колода карт"
     cards = []
@@ -40,6 +42,11 @@ class DeckCards:
         self.last_card = self.cards[len(self.cards) - 1]
         self.trump_suit = self.last_card.suit
 
+        # установка признака козырной карты
+        filter_trump = filter(lambda cart_trump: cart_trump.suit == self.trump_suit, self.cards)
+        for cart_item in filter_trump:
+            cart_item.is_trump = True
+
     def have_cards(self):
         return len(self.cards) != 0
 
@@ -48,6 +55,12 @@ class DeckCards:
         self.cards.remove(current_cart)
         return current_cart
 
+    def deck_cards_view(self):
+        result = '?'
+        if len(self.cards) <=5:
+            result = str(len(self.cards))
+
+        return self.last_card.name + ' осталось '+result+' карт'
 class Card:
     "Класс для представления карты"
 
@@ -63,4 +76,4 @@ class Card:
         self.suit = suit
         self.number = number
         self.high = high
-
+        self.is_trump = False
