@@ -53,4 +53,14 @@ class PlayerPlace:
         return result.rstrip()
 
     def start_player_game(self):
-        pass
+        first_step = True
+        while True:
+            if first_step:
+                if self.current_player == self.main_player:  # Ход реального игрока
+                    pass
+                else:
+                    pass
+            else:
+                pass
+            return input('Результат')
+            first_step = False

@@ -36,37 +36,48 @@ def start_game():
     # раздача карт
     player_place.dealing_cards()
 
-    # while True:
-    #    for player_item in player_place.players_list:
-    #        print(player_item.name)
 
-    for player_item in player_place.players_list:
-        player_place.current_player = player_item
-        index = player_place.players_list.index(player_item)
-        if index == len(player_place.players_list) - 1:
-            player_place.fights_back_player = player_place.players_list[0]
-        else:
-            player_place.fights_back_player = player_place.players_list[index + 1]
+    while True:
+        for player_item in player_place.players_list:
 
-        print(player_place.player_view())
-        print('Колода:' + player_place.deck_cards.deck_cards_view())
-        print('Ходит:' + player_item.name)
-        print('Отбивается:' + player_place.fights_back_player.name)
-        print('Карты на столе')
-        #first_step = True
-        if player_place.current_player != player_place.main_player:
-            player_place.cards_on_table = player_item.make_first_move()
-            print(player_place.cards_on_table_show())
-        else:
-            user_action = input('Ваш ход:')
-            player_place.player_item.get_cards_from_table(player_place.cards_on_table)
-            print('Ваши карты')
-            print(player_place.main_player.cart_view())
-        print('Ваши карты')
-        print(player_place.main_player.cart_view())
-        # player_item.make_move()
-        user_action = input('Ваш ход:')
-        player_place.print_border()
+            player_place.current_player = player_item
+            index = player_place.players_list.index(player_item)
+            if index == len(player_place.players_list) - 1:
+                player_place.fights_back_player = player_place.players_list[0]
+            else:
+                player_place.fights_back_player = player_place.players_list[index + 1]
+            print(player_place.player_view())
+            print(player_place.fights_back_player.name)
+            answer = player_place.start_player_game()
+
+
+    # for player_item in player_place.players_list:
+    #    player_place.current_player = player_item
+    #   index = player_place.players_list.index(player_item)
+    #   if index == len(player_place.players_list) - 1:
+    #       player_place.fights_back_player = player_place.players_list[0]
+    #  else:
+    #      player_place.fights_back_player = player_place.players_list[index + 1]
+
+    # print(player_place.player_view())
+    # print('Колода:' + player_place.deck_cards.deck_cards_view())
+    #  print('Ходит:' + player_item.name)
+    #  print('Отбивается:' + player_place.fights_back_player.name)
+    #  print('Карты на столе')
+    # #first_step = True
+    # if player_place.current_player != player_place.main_player:
+    #    player_place.cards_on_table = player_item.make_first_move()
+    #    print(player_place.cards_on_table_show())
+    # else:
+    #    user_action = input('Ваш ход:')
+    #    player_place.player_item.get_cards_from_table(player_place.cards_on_table)
+    # print('Ваши карты')
+    # print(player_place.main_player.cart_view())
+    # print('Ваши карты')
+    # print(player_place.main_player.cart_view())
+    ## player_item.make_move()
+    # user_action = input('Ваш ход:')
+    # player_place.print_border()
 
 
 start_game()
