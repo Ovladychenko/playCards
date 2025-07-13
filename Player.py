@@ -8,6 +8,9 @@ class Player:
     def get_cart(self, cart):
         self.cards.append(cart)
 
+    def give_cart(self, cart):
+        self.cards.remove(cart)
+
     def make_move(self):
         print('Ход бота')
 
@@ -42,7 +45,7 @@ class Player:
 
     def get_cards_from_table(self,cards_on_table):
         for cart_item in cards_on_table:
-            self.cards.append()
+            self.cards.append(cart_item)
             cards_on_table.clear()
 
 

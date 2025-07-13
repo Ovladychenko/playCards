@@ -46,8 +46,8 @@ def start_game():
                 player_place.fights_back_player = player_place.players_list[0]
             else:
                 player_place.fights_back_player = player_place.players_list[index + 1]
-            print(player_place.player_view())
-            print(player_place.fights_back_player.name)
+            #print(player_place.player_view())
+            #print(player_place.fights_back_player.name)
             answer = player_place.start_player_game()
 
 

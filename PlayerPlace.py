@@ -52,15 +52,53 @@ class PlayerPlace:
             index += 1
         return result.rstrip()
 
+    def make_users_move(self):
+        for player_item in self.players_list:
+            if player_item != self.current_player and player_item != self.fights_back_player:
+                for cart_item in self.cards_on_table:
+                    cart_list = player_item.similar_cards(cart_item, False)
+                    if len(cart_list) > 0:
+                        print('Игрок ' + player_item.name + ' добавляет ' + self.get_list_cards_view(cart_list))
+                        for cart_item_player in cart_list:
+                            player_item.give_cart(cart_item_player)
+                        self.cards_on_table_add_cards(cart_list)
+
+    def cards_on_table_add_cards(self, cards):
+        for cart_item in cards:
+            self.cards_on_table.append(cart_item)
+
+    @staticmethod
+    def get_list_cards_view(cards):
+        result = ''
+        for cart_item in cards:
+            result += cart_item.name + ' | '
+        return result
+
     def start_player_game(self):
         first_step = True
+        self.cards_on_table.clear()
         while True:
+            print(self.player_view())
+            print('Колода:' + self.deck_cards.deck_cards_view())
+            print('Ходит:' + self.current_player.name)
+            print('Отбивается:' + self.fights_back_player.name)
+            # print('Карты на столе')
+            # print(player_place.cards_on_table_show())
+            # print('Ваши карты')
+            # print(self.main_player.cart_view())
+
             if first_step:
                 if self.current_player == self.main_player:  # Ход реального игрока
                     pass
                 else:
-                    pass
+                    self.cards_on_table_add_cards(self.current_player.make_first_move())
+                    self.make_users_move()
             else:
                 pass
-            return input('Результат')
+            print('Карты на столе')
+            print(self.cards_on_table_show())
+            print('Ваши карты')
+            print(self.main_player.cart_view())
+            input('Ваш ход:')
             first_step = False
+            self.print_border()
