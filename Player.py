@@ -46,6 +46,6 @@ class Player:
     def get_cards_from_table(self,cards_on_table):
         for cart_item in cards_on_table:
             self.cards.append(cart_item)
-            cards_on_table.clear()
+        cards_on_table.clear()
 
 

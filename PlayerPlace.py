@@ -74,6 +74,17 @@ class PlayerPlace:
             result += cart_item.name + ' | '
         return result
 
+    def validate_answer(self, answer):
+        if answer == '+':
+            result = 0
+        elif answer == '-':
+            self.main_player.get_cards_from_table(self.cards_on_table)
+            result = 0
+        else:
+            result = 0
+
+        return result
+
     def start_player_game(self):
         first_step = True
         self.cards_on_table.clear()
@@ -99,6 +110,14 @@ class PlayerPlace:
             print(self.cards_on_table_show())
             print('Ваши карты')
             print(self.main_player.cart_view())
-            input('Ваш ход:')
+            answer = input('Ваш ход [На столе, Ваша карта]:')
+            if answer == '+':
+                return 1
+            elif answer == '-':
+                self.main_player.get_cards_from_table(self.cards_on_table)
+                return 0
+            else:
+                pass
+
             first_step = False
             self.print_border()

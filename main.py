@@ -36,7 +36,6 @@ def start_game():
     # раздача карт
     player_place.dealing_cards()
 
-
     while True:
         for player_item in player_place.players_list:
 
@@ -46,10 +45,9 @@ def start_game():
                 player_place.fights_back_player = player_place.players_list[0]
             else:
                 player_place.fights_back_player = player_place.players_list[index + 1]
-            #print(player_place.player_view())
-            #print(player_place.fights_back_player.name)
+            # print(player_place.player_view())
+            # print(player_place.fights_back_player.name)
             answer = player_place.start_player_game()
-
 
     # for player_item in player_place.players_list:
     #    player_place.current_player = player_item
@@ -81,3 +79,11 @@ def start_game():
 
 
 start_game()
+
+# sentence = "This is a sample sentence."
+# words = sentence.split()
+# print(words)
+
+# my_string = "apple#banana#cherry"
+# fruits = my_string.split("#")
+# print(fruits)
