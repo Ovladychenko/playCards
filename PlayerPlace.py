@@ -8,6 +8,7 @@ class PlayerPlace:
     fights_back_player = None
     cards_on_table = []
     deck_cards = None
+    cards_on_table_list = []
 
     def dealing_cards(self):
         for i in range(6):
@@ -44,11 +45,23 @@ class PlayerPlace:
             print('=', end='')
         print(' ')
 
+    # def cards_on_table_show(self):
+    #    result = ''
+    # index = 1
+    # for cart_item in self.cards_on_table:
+    #    result += ' [' + str(index) + '] ' + cart_item.name + ' | '
+    #    index += 1
+    # return result.rstrip()
+
     def cards_on_table_show(self):
         result = ''
         index = 1
-        for cart_item in self.cards_on_table:
-            result += ' [' + str(index) + '] ' + cart_item.name + ' | '
+        for cart_item in self.cards_on_table_list:
+            name = cart_item.get('cart').name
+            if cart_item.get('cart_link') != None:
+                name = name + ' / ' + cart_item.get('cart_link').name
+
+            result += ' [' + str(index) + '] ' + name + ' | '
             index += 1
         return result.rstrip()
 
@@ -66,6 +79,8 @@ class PlayerPlace:
     def cards_on_table_add_cards(self, cards):
         for cart_item in cards:
             self.cards_on_table.append(cart_item)
+            cart_link = {'cart': cart_item, 'cart_link': None}
+            self.cards_on_table_list.append(cart_link)
 
     @staticmethod
     def get_list_cards_view(cards):
@@ -74,20 +89,18 @@ class PlayerPlace:
             result += cart_item.name + ' | '
         return result
 
-    def validate_answer(self, answer):
-        if answer == '+':
-            result = 0
-        elif answer == '-':
-            self.main_player.get_cards_from_table(self.cards_on_table)
-            result = 0
-        else:
-            result = 0
-
-        return result
+    def processing_answer(self, answer):
+        if ' ' in answer:
+            words = answer.split()
+            print(words)
+        elif ',' in answer:
+            print('couple cards')
+        return 0
 
     def start_player_game(self):
         first_step = True
         self.cards_on_table.clear()
+        self.cards_on_table_list.clear()
         while True:
             print(self.player_view())
             print('Колода:' + self.deck_cards.deck_cards_view())
@@ -117,7 +130,7 @@ class PlayerPlace:
                 self.main_player.get_cards_from_table(self.cards_on_table)
                 return 0
             else:
-                pass
+               result = self.processing_answer(answer)
 
             first_step = False
             self.print_border()
