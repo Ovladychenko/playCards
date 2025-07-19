@@ -68,8 +68,8 @@ class PlayerPlace:
     def make_users_move(self):
         for player_item in self.players_list:
             if player_item != self.current_player and player_item != self.fights_back_player:
-                for cart_item in self.cards_on_table:
-                    cart_list = player_item.similar_cards(cart_item, False)
+                for cart_item in self.cards_on_table_list:
+                    cart_list = player_item.similar_cards(cart_item.get('cart'), False)
                     if len(cart_list) > 0:
                         print('Игрок ' + player_item.name + ' добавляет ' + self.get_list_cards_view(cart_list))
                         for cart_item_player in cart_list:
@@ -90,12 +90,30 @@ class PlayerPlace:
         return result
 
     def processing_answer(self, answer):
+        result = True
         if ' ' in answer:
-            words = answer.split()
-            print(words)
+            answer_list = answer.split()
+            result = self.check_answer(answer_list)
         elif ',' in answer:
-            print('couple cards')
-        return 0
+            answer_list = list()
+            answer_list.append(answer)
+            result = self.check_answer(answer_list)
+        return result
+
+    def check_answer(self, answer_list):
+        is_error = False
+        for answer_item in answer_list:
+            if not ',' in answer_item:
+                return False
+            answer_array = answer_item.split(',')
+            #получаем карту на столе
+            cart_dict = self.cards_on_table_list[int(answer_array[0])-1]
+            cart_table = cart_dict.get('cart')
+            #получаем карту игрока
+            cart_user = self.main_player.cards[int(answer_array[1])-1]
+            if cart_user.priority > cart_table.priority and cart_user.suit == cart_table.suit:
+                print('Бьет карту')
+        return is_error
 
     def start_player_game(self):
         first_step = True
@@ -130,7 +148,7 @@ class PlayerPlace:
                 self.main_player.get_cards_from_table(self.cards_on_table)
                 return 0
             else:
-               result = self.processing_answer(answer)
+                result = self.processing_answer(answer)
 
             first_step = False
             self.print_border()
