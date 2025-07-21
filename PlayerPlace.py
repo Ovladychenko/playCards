@@ -140,10 +140,6 @@ class PlayerPlace:
             print('Колода:' + self.deck_cards.deck_cards_view())
             print('Ходит:' + self.current_player.name)
             print('Отбивается:' + self.fights_back_player.name)
-            # print('Карты на столе')
-            # print(player_place.cards_on_table_show())
-            # print('Ваши карты')
-            # print(self.main_player.cart_view())
 
             if first_step:
                 if self.current_player == self.main_player:  # Ход реального игрока
@@ -151,15 +147,15 @@ class PlayerPlace:
                 else:
                     self.cards_on_table_add_cards(self.current_player.make_first_move())
                     self.make_users_move()
-            else:
-                pass
+            #else:
+            #    pass
             print('Карты на столе')
             print(self.cards_on_table_show())
             print('Ваши карты')
             print(self.main_player.cart_view())
             answer = input('Ваш ход [На столе, Ваша карта]:')
             if answer == '+':
-                return 1
+                continue
             elif answer == '-':
                 self.main_player.get_cards_from_table(self.cards_on_table)
                 return 0
