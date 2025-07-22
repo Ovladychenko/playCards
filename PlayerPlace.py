@@ -129,7 +129,24 @@ class PlayerPlace:
         for cart_item in self.cards_on_table_list:
             if cart_item.get('cart_link') is not None:
                 index += 1
-        return  len(self.cards_on_table_list) == index
+        return len(self.cards_on_table_list) == index
+
+    def move_main_player(self, answer):
+
+        if ',' in answer:
+            answer_array = answer.split(',')
+        else:
+            answer_array = list()
+            answer_array.append(answer)
+
+        for answer_item in answer_array:
+            cart = self.main_player.cards[int(answer_item)-1]
+            cart_link = {'cart': cart, 'cart_link': None}
+            self.cards_on_table_list.append(cart_link)
+            self.main_player.give_cart(cart)
+            # cards
+        # cart_link = {'cart': cart_item, 'cart_link': None}
+        # self.cards_on_table_list.append(cart_link)
 
     def start_player_game(self):
         first_step = True
@@ -147,20 +164,24 @@ class PlayerPlace:
                 else:
                     self.cards_on_table_add_cards(self.current_player.make_first_move())
                     self.make_users_move()
-            #else:
+            # else:
             #    pass
             print('Карты на столе')
             print(self.cards_on_table_show())
             print('Ваши карты')
             print(self.main_player.cart_view())
-            answer = input('Ваш ход [На столе, Ваша карта]:')
-            if answer == '+':
-                continue
-            elif answer == '-':
-                self.main_player.get_cards_from_table(self.cards_on_table)
-                return 0
+            if first_step and self.current_player == self.main_player:
+                answer = input('Ваш ход [карты через запятую]:')
+                self.move_main_player(answer)
             else:
-                result = self.processing_answer(answer)
+                answer = input('Ваш ход [На столе, Ваша карта]:')
+                if answer == '+':
+                    continue
+                elif answer == '-':
+                    self.main_player.get_cards_from_table(self.cards_on_table)
+                    return 0
+                else:
+                    result = self.processing_answer(answer)
             if self.is_card_bits():
                 print('Отбой карт, ход переходит следующему игроку!')
                 return 0
