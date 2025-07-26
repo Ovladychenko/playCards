@@ -68,6 +68,7 @@ class PlayerPlace:
     def make_users_move(self):
         for player_item in self.players_list:
             if player_item != self.current_player and player_item != self.fights_back_player:
+                print(f'Ищет карты {player_item.name}')
                 for cart_item in self.cards_on_table_list:
                     cart_list = player_item.similar_cards(cart_item.get('cart'), False)
                     if len(cart_list) > 0:
@@ -117,7 +118,6 @@ class PlayerPlace:
             ):
                 cart_dict['cart_link'] = cart_user
                 self.main_player.give_cart(cart_user)
-                pass
             else:
                 print('Карта ' + cart_user.name + ' не может бить карту ' + cart_table.name)
 
@@ -131,22 +131,57 @@ class PlayerPlace:
                 index += 1
         return len(self.cards_on_table_list) == index
 
-    def move_main_player(self, answer):
+    def cards_on_table_count(self):
+        result = 0
+        for cart_item in self.cards_on_table_list:
+            if cart_item.get('cart') is not None:
+                result += 1
+        return result
 
+    def card_for_table_validate(self, card_user):
+        result = False
+        for card_dict in self.cards_on_table_list:
+            if card_dict.get('cart').priority == card_user.priority:
+                result = True
+                break
+        return result
+
+    def issuing_cards_to_players(self):
+        for player_item in self.players_list:
+            if len(player_item.cards) < 6:
+                need_cards = 6 - len(player_item.cards)
+                for i in range(need_cards):
+                    player_item.get_cart(self.deck_cards.give())
+
+    def move_main_player(self, answer, first_step=False):
+        answer_array = list()
         if ',' in answer:
             answer_array = answer.split(',')
         else:
-            answer_array = list()
             answer_array.append(answer)
 
         for answer_item in answer_array:
-            cart = self.main_player.cards[int(answer_item)-1]
-            cart_link = {'cart': cart, 'cart_link': None}
+            cart_user = self.main_player.cards[int(answer_item) - 1]
+            if first_step:
+                if self.cards_on_table_count() != 0:
+                    if self.cards_on_table_list[0].get('cart').priority != cart_user.priority:
+                        print(f'Карта {cart_user.name} не может ходить')
+                        continue
+            else:
+                if not self.card_for_table_validate(cart_user):
+                    print(f'Карта {cart_user.name} не может ходить')
+                    continue
+
+            cart_link = {'cart': cart_user, 'cart_link': None}
             self.cards_on_table_list.append(cart_link)
-            self.main_player.give_cart(cart)
+            self.main_player.give_cart(cart_user)
             # cards
         # cart_link = {'cart': cart_item, 'cart_link': None}
         # self.cards_on_table_list.append(cart_link)
+
+    # def move_player(self):
+    #    for card_dict in self.cards_on_table_list:
+    #        cart_table = card_dict.get('cart')
 
     def start_player_game(self):
         first_step = True
@@ -155,24 +190,32 @@ class PlayerPlace:
         while True:
             print(self.player_view())
             print('Колода:' + self.deck_cards.deck_cards_view())
-            print('Ходит:' + self.current_player.name)
-            print('Отбивается:' + self.fights_back_player.name)
+            print(f'Ходит: {self.current_player.name} у игрока {len(self.fights_back_player.cards)} карт ')
+            print(f'Отбивается: {self.fights_back_player.name}  ')
 
             if first_step:
-                if self.current_player == self.main_player:  # Ход реального игрока
-                    pass
-                else:
+                if self.current_player != self.main_player:
                     self.cards_on_table_add_cards(self.current_player.make_first_move())
                     self.make_users_move()
-            # else:
-            #    pass
+            else:
+                self.make_users_move()
             print('Карты на столе')
             print(self.cards_on_table_show())
             print('Ваши карты')
             print(self.main_player.cart_view())
-            if first_step and self.current_player == self.main_player:
+            if self.current_player == self.main_player:
                 answer = input('Ваш ход [карты через запятую]:')
-                self.move_main_player(answer)
+                if answer == '+':
+                    if self.is_card_bits():
+                        print('Отбой')
+                        return 0
+                    else:
+
+                        pass
+                else:
+                    self.move_main_player(answer, first_step)
+                    self.make_users_move()
+                    self.current_player.move_player(self.cards_on_table_list)
             else:
                 answer = input('Ваш ход [На столе, Ваша карта]:')
                 if answer == '+':
@@ -182,8 +225,8 @@ class PlayerPlace:
                     return 0
                 else:
                     result = self.processing_answer(answer)
-            if self.is_card_bits():
-                print('Отбой карт, ход переходит следующему игроку!')
-                return 0
+            # if self.is_card_bits() and self.current_player == self.main_player:
+            #    print('Отбой карт, ход переходит следующему игроку!')
+            #    return 0
             first_step = False
             self.print_border()

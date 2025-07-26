@@ -48,6 +48,8 @@ def start_game():
             # print(player_place.player_view())
             # print(player_place.fights_back_player.name)
             answer = player_place.start_player_game()
+            if answer == 0:
+                player_place.issuing_cards_to_players()
 
     # for player_item in player_place.players_list:
     #    player_place.current_player = player_item
