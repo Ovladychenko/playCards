@@ -67,7 +67,7 @@ class PlayerPlace:
 
     def make_users_move(self):
         for player_item in self.players_list:
-            if player_item != self.current_player and player_item != self.fights_back_player:
+            if player_item != self.main_player and player_item != self.fights_back_player:
                 print(f'Ищет карты {player_item.name}')
                 for cart_item in self.cards_on_table_list:
                     cart_list = player_item.similar_cards(cart_item.get('cart'), False)
@@ -79,7 +79,7 @@ class PlayerPlace:
 
     def cards_on_table_add_cards(self, cards):
         for cart_item in cards:
-            self.cards_on_table.append(cart_item)
+            # self.cards_on_table.append(cart_item)
             cart_link = {'cart': cart_item, 'cart_link': None}
             self.cards_on_table_list.append(cart_link)
 
@@ -144,6 +144,7 @@ class PlayerPlace:
             if card_dict.get('cart').priority == card_user.priority:
                 result = True
                 break
+
         return result
 
     def issuing_cards_to_players(self):
@@ -185,7 +186,7 @@ class PlayerPlace:
 
     def start_player_game(self):
         first_step = True
-        self.cards_on_table.clear()
+        # self.cards_on_table.clear()
         self.cards_on_table_list.clear()
         while True:
             print(self.player_view())
@@ -208,10 +209,13 @@ class PlayerPlace:
                 if answer == '+':
                     if self.is_card_bits():
                         print('Отбой')
+                        self.print_border()
                         return 0
                     else:
-
-                        pass
+                        # забрать карты игрока
+                        print(f' {self.current_player.name} забирает карты со стола')
+                        self.current_player.get_cards_from_table(self.cards_on_table_list)
+                        return 0
                 else:
                     self.move_main_player(answer, first_step)
                     self.make_users_move()
@@ -221,11 +225,11 @@ class PlayerPlace:
                 if answer == '+':
                     continue
                 elif answer == '-':
-                    self.main_player.get_cards_from_table(self.cards_on_table)
+                    self.main_player.get_cards_from_table(self.cards_on_table_list)
                     return 0
                 else:
                     result = self.processing_answer(answer)
-            # if self.is_card_bits() and self.current_player == self.main_player:
+            #if self.is_card_bits() and self.fights_back_player == self.main_player:
             #    print('Отбой карт, ход переходит следующему игроку!')
             #    return 0
             first_step = False

@@ -44,15 +44,25 @@ class Player:
     def make_first_move(self):
         print(f'{self.name} ищет карты')
         cart = self.find_min_cart(self)
+        print(f'минимальная карта {cart.name}')
         card_list = self.similar_cards(cart, False)
+        if len(card_list) == 0:
+            card_list.append(cart)
+
         for card_item in card_list:
             self.give_cart(card_item)
         return card_list
 
-    def get_cards_from_table(self, cards_on_table):
-        for cart_item in cards_on_table:
-            self.cards.append(cart_item)
-        cards_on_table.clear()
+    def get_cards_from_table(self, cards_on_table_list):
+        # for cart_item in cards_on_table:
+        #    self.cards.append(cart_item)
+        # cards_on_table.clear()
+        for card_dict in cards_on_table_list:
+            if card_dict.get('cart') is not None:
+                self.cards.append(card_dict.get('cart'))
+            if card_dict['cart_link'] is not None:
+                self.cards.append(card_dict['cart_link'])
+        cards_on_table_list.clear()
 
     def move_player(self, cards_on_table_list):
         for card_dict in cards_on_table_list:
