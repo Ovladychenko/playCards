@@ -44,7 +44,6 @@ class Player:
     def make_first_move(self):
         print(f'{self.name} ищет карты')
         cart = self.find_min_cart(self)
-        print(f'минимальная карта {cart.name}')
         card_list = self.similar_cards(cart, False)
         if len(card_list) == 0:
             card_list.append(cart)
