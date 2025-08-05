@@ -82,3 +82,17 @@ class Player:
                     self.give_cart(card_item)
                     print(f'Игрок отбивает карту {card_table.name} картой {card_item.name}')
                     break
+
+    @classmethod
+    def make_users_move(cls, player_place):
+        for player_item in player_place.players_list:
+            if player_item != player_place.main_player and player_item != player_place.fights_back_player:
+                print(f'Ищет карты {player_item.name}')
+                for cart_item in player_place.cards_on_table_list:
+                    cart_list = player_item.similar_cards(cart_item.get('cart'), False)
+                    if len(cart_list) > 0:
+                        print(
+                            'Игрок ' + player_item.name + ' добавляет ' + player_place.get_list_cards_view(cart_list))
+                        for cart_item_player in cart_list:
+                            player_item.give_cart(cart_item_player)
+                    player_place.cards_on_table_add_cards(cart_list)
